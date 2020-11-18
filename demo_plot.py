@@ -105,17 +105,7 @@ def submit():
 	# print(model)
 	# predict = np.poly1d(model)
 	# print(predict(unknown_rgb))
-	concentrations = list()
-	for idx in range(len(conc)):
-		concentrations.append(int(conc[idx].get()))
-	plt.scatter(concentrations, rgb_vals)
-	plt.ylabel("Average RGB Intensity")
-	plt.xlabel("Concentration")
-	plt.title("RGB Intensity vs Concentration")
-	for x,y in zip(concentrations, rgb_vals):
-		label = f"({x},{round(y,2)})"
-		plt.annotate(label, (x,y),textcoords="offset points", xytext = (0,10), ha="center")
-	plt.show()
+	
 
 def make_plot():
 	rgbvals = list()
@@ -136,16 +126,30 @@ def make_plot():
 		ave = (R+G+B)/3
 		rgbvals.append(ave)
 	concentrations = list()
-	for idx in range(len(conc)):
+	for idx in range(len(conc)-1):
 		concentrations.append(int(conc[idx].get()))
-	plt.scatter(concentrations, rgbvals)
+	known_rgb_vals = rgbvals[0:len(rgbvals)-1]
+	unknown_rgb_val = rgbvals[-1];
+	#print("Known RGB Values: ", known_rgb_vals)
+	#print("Unknown RGB Value: ", unknown_rgb_val)
+	model = np.polyfit(known_rgb_vals, concentrations, 1);
+	predict = np.poly1d(model);
+	unknown_conc = predict(unknown_rgb_val)
+	plt.scatter(concentrations, known_rgb_vals, c='b', label='Known Samples')
+	plt.scatter(unknown_conc, unknown_rgb_val, c='r', label='Unknown Sample');
 	plt.ylabel("Average RGB Intensity")
 	plt.xlabel("Concentration")
 	plt.title("RGB Intensity vs Concentration")
+	label = f"({round(unknown_conc,2)}, {round(unknown_rgb_val,2)})"
+	x_lin_reg = range(int(min(known_rgb_vals))-4, int(max(known_rgb_vals))+2);
+	y_lin_reg = predict(x_lin_reg);
+	plt.plot(y_lin_reg,x_lin_reg, c='y', label='Best Fit Line')
+	plt.annotate(label, (unknown_conc,unknown_rgb_val), textcoords="offset points", xytext=(0,10), ha="center")
 	for x,y in zip(concentrations, rgbvals):
 		label = f"({x},{round(y,2)})"
 		plt.annotate(label, (x,y),textcoords="offset points", xytext = (0,10), ha="center")
 		plt.ylim(min(rgbvals)-15, max(rgbvals)+15)
+	plt.legend(loc='upper left')
 	plt.show()
 	
 
