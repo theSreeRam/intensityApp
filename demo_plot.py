@@ -135,16 +135,21 @@ def make_plot():
 	model = np.polyfit(known_rgb_vals, concentrations, 1);
 	predict = np.poly1d(model);
 	unknown_conc = predict(unknown_rgb_val)
+	print("Unknown Concentration: ", unknown_conc)
 	plt.scatter(concentrations, known_rgb_vals, c='b', label='Known Samples')
 	plt.scatter(unknown_conc, unknown_rgb_val, c='r', label='Unknown Sample');
 	plt.ylabel("Average RGB Intensity")
 	plt.xlabel("Concentration")
 	plt.title("RGB Intensity vs Concentration")
 	label = f"({round(unknown_conc,2)}, {round(unknown_rgb_val,2)})"
-	x_lin_reg = range(int(min(known_rgb_vals))-4, int(max(known_rgb_vals))+2);
-	y_lin_reg = predict(x_lin_reg);
-	plt.plot(y_lin_reg,x_lin_reg, c='y', label='Best Fit Line')
-	plt.annotate(label, (unknown_conc,unknown_rgb_val), textcoords="offset points", xytext=(0,10), ha="center")
+	
+	
+	x_lin_reg = list(concentrations);
+	y_lin_reg = (x_lin_reg - model[1])/model[0]
+	plt.plot(x_lin_reg,y_lin_reg, c='y', label='Best Fit Line')
+	
+	
+	plt.annotate(label, (unknown_conc,unknown_rgb_val), textcoords="offset points", xytext=(10,-20), ha="center")
 	for x,y in zip(concentrations, rgbvals):
 		label = f"({x},{round(y,2)})"
 		plt.annotate(label, (x,y),textcoords="offset points", xytext = (0,10), ha="center")
