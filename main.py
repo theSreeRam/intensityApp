@@ -1,4 +1,4 @@
-#Version Created: 18-NOV-2020  16:16
+#Version Created: 20-NOV-2020  17:31
 
 from tkinter import *
 from PIL import ImageTk, Image
@@ -40,7 +40,7 @@ my_canvas.create_window((0,0), window=second_frame, anchor="nw")
 
 
 lbl1 = ttk.Label(second_frame, text="RGB Intensity Calculator",  font="none 24 bold")
-lbl1.grid(row=0, column=0)
+lbl1.grid(row=0, column=2, columnspan=4, padx=250)
 
 
 lbl1.place(anchor=N)
